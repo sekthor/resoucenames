@@ -52,6 +52,9 @@ func (p NamePattern) Unmarshal(resourceName string, resource any) error {
 	return nil
 }
 
+// Marshal constructs the resource name of a resource by injecting
+// the values of it's tagged fields as the variable segments corresponding
+// with the tag values.
 func (p NamePattern) Marshal(resource any) (string, error) {
 	resourceName := ""
 	val := reflect.ValueOf(resource)
