@@ -21,27 +21,23 @@ You will also need to define the pattern of your resource's resource name.
 The variable segments of the resource name is what we will map the tagged fields to.
 Make sure, that you wrap variable segments in curly braces and that the name matches what you set in the tag.
 
-```golang
+```go
 pattern := resourcename.FromPattern("/resources/{resource_id}")
 ```
 
 We can use our pattern to parse a string resource name and assign it's variable segments to our resource struct.
 Make sure you pass your resource by reference.
 
-```golang
+```go
 resource := Resource{}
 err := pattern.MatchInto("/resources/abcdefg", &resource)
 ```
 
 We also support any number of parent resources.
+Usually you don't have grandparent ids in your model, but this is just to prove that it would be supported.
+But our field tags would look like:
 
-```protobuf
-message Child {
-
-}
-```
-
-```golang
+```go
 type Child struct {
     Id            string `rns:"child_id"`
     ParentId      string `rns:"parent_id"`
@@ -53,7 +49,7 @@ type Child struct {
 
 ```
 
-```golang
+```go
 child := Child{}
 
 rname := "grandparents/abcd/parents/efgh/children/ijkl"
