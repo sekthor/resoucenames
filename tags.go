@@ -2,6 +2,11 @@ package resourcenames
 
 import "reflect"
 
+// MatchInto parses a given resource name with the name pattern.
+// All discovered variable segment values will be set on the corresponding
+// resource field.
+// It chooses the field to set the value to by comparing the segment name
+// with the matching value in the `rns:"<segment_name>§"` tag.
 func (p NamePattern) MatchInto(resourceName string, resource any) error {
 	params, err := p.Parse(resourceName)
 	if err != nil {

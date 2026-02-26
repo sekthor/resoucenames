@@ -1,5 +1,8 @@
 package resourcenames
 
+// Parse() parses all variable segments of a pattern from a given resource name
+// into a map[string]string, where key is the name of the variable segment and
+// value is the value of that segment in the resource name.
 func (p NamePattern) Parse(resourcename string) (map[string]string, error) {
 	nameSegments := split(resourcename)
 	namedParams := make(map[string]string)
