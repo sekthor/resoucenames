@@ -9,6 +9,51 @@ In the domain layer however, your domain resources will typically work with `id`
 Parsing the id(s) from a resource name can be tedious and repetitive.
 With this package, they can be injected into a resource from a pattern and a resource name using golang struct tags.
 
+## Problem Example
+
+This is how the AIP defines api resources (example from AIP).
+The primary identifier is not an id, but a full resource name (`books/{book}`).
+
+```protobuf
+message Book {
+  option (google.api.resource) = {
+    type: "library.googleapis.com/Book"
+    pattern: "publishers/{publisher}/books/{book}"
+  };
+
+  // The resource name of the book.
+  // Format: publishers/{publisher}/books/{book}
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // Other fields...
+}
+```
+
+Also, all requests identify the resource by it's full resource name:
+
+```protobuf
+message GetBookRequest {
+  // The name of the book to retrieve.
+  // Format: publishers/{publisher}/books/{book}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type: "library.googleapis.com/Book"
+    }];
+}
+```
+
+The resource may also have a parent (or even grandparent) resource.
+It's resource name can become very "nested".
+
+```
+grandparents/{grandparent_id}/parents/{parent_id}/children/{child_id}
+```
+
+But generally, our domain models just work with the ids.
+We don't pass full resource names as primary keys to the database, for example.
+This package help translating api messages to domain layer objects by unmarshaling resource names into tagged domain structs.
+
 ## Usage
 
 When defining a domain resource, you can use golang field tags to specify a resource name segment (rns) for this field.
