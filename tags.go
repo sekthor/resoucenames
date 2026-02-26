@@ -1,4 +1,4 @@
-package resoucenames
+package resourcenames
 
 import "reflect"
 

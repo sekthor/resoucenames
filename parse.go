@@ -1,4 +1,4 @@
-package resoucenames
+package resourcenames
 
 func (p NamePattern) Parse(resourcename string) (map[string]string, error) {
 	nameSegments := split(resourcename)
