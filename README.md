@@ -4,7 +4,10 @@
 
 Google's [AIP](https://google.aip.dev) defines standards on how APIs should be written.
 [AIP-122](https://google.aip.dev/122) mandates that each resource must be have a resource name, by which the resource is identified.
-That name must be of the format `resources/{resource_id}`
+That name must be of the format `resources/{resource_id}`.
+In the domain layer however, your domain resources will typically work with `id` only, rather than the full resource name.
+Parsing the id(s) from a resource name can be tedious and repetitive.
+With this package, they can be injected into a resource from a pattern and a resource name using golang struct tags.
 
 ## Usage
 
