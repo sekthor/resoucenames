@@ -1,7 +1,5 @@
 # resourcename
 
-> parse google-type resource names to convert from DTOs to domain models.
-
 Google's [AIP](https://google.aip.dev) defines standards on how APIs should be written.
 [AIP-122](https://google.aip.dev/122) mandates that each resource must be have a resource name, by which the resource is identified.
 That name must be of the format `resources/{resource_id}`.
@@ -12,7 +10,7 @@ With this package, they can be injected into a resource from a pattern and a res
 ## Problem Example
 
 This is how the AIP defines api resources (example from AIP).
-The primary identifier is not an id, but a full resource name (`books/{book}`).
+The primary identifier is not an id, but a full resource name (`/publishers/{publisher}/books/{book}`), including parent resource name and all.
 
 ```protobuf
 message Book {
@@ -78,7 +76,21 @@ Make sure you pass your resource by reference.
 
 ```go
 resource := Resource{}
-err := pattern.MatchInto("/resources/abcdefg", &resource)
+err := pattern.Unmarshal("/resources/abcdefg", &resource)
+```
+
+Of course we can also do the reverse
+
+```go
+resource := Resource {
+  Id: "abcdefg"
+}
+
+pattern := resourcename.FromPattern("/resources/{resource_id}")
+resourceName, err := pattern.Marshal(&resource)
+if err != nil {
+  // ...
+}
 ```
 
 We also support any number of parent resources.
@@ -94,8 +106,9 @@ type Child struct {
     // but works if need be
     GrandparentId string `rns:"grandparent_id"` 
 }
-
 ```
+
+We can unmarshal a child resource just like any other resource.
 
 ```go
 child := Child{}
@@ -105,7 +118,7 @@ rname := "grandparents/abcd/parents/efgh/children/ijkl"
 pattern := resourcenames.FromPattern(
     "grandparents/{grandparent_id}/parents/{parent_id}/children/{child_id}")
 
-err := pattern.MatchInto(rname, &child)
+err := pattern.Unmarshal(rname, &child)
 if err != nil {
     return err
 }
