@@ -104,11 +104,5 @@ func (p NamePattern) Marshal(resource any) (string, error) {
 			return "", fmt.Errorf("%w: %q", ErrMissingSegment, segment.value)
 		}
 	}
-
-	// Optional: strip leading slash if your format requires
-	if resourceName == "" {
-		return "", nil
-	}
-
 	return resourceName, nil
 }
