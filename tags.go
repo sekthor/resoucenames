@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// MatchInto parses a given resource name with the name pattern.
+// Unmarshal parses a given resource name with the name pattern.
 // All discovered variable segment values will be set on the corresponding
 // resource field.
 // It chooses the field to set the value to by comparing the segment name
@@ -73,8 +73,13 @@ func (p NamePattern) Marshal(resource any) (string, error) {
 	typ := val.Type()
 
 	for _, segment := range p.segments {
+
+		if resourceName != "" {
+			resourceName += "/"
+		}
+
 		if !segment.isParam {
-			resourceName += "/" + segment.value
+			resourceName += segment.value
 			continue
 		}
 
@@ -98,7 +103,7 @@ func (p NamePattern) Marshal(resource any) (string, error) {
 				str = fmt.Sprint(fieldValue.Interface())
 			}
 
-			resourceName += "/" + str
+			resourceName += str
 			found = true
 			break
 		}
